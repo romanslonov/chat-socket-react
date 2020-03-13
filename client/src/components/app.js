@@ -6,6 +6,8 @@ import Header from './header';
 // Code-splitting is automated for routes
 import Home from '../routes/home';
 import Profile from '../routes/profile';
+import SignIn from '../routes/auth/SignIn'
+import Registration from '../routes/auth/Registration'
 
 export default class App extends Component {
 	
@@ -21,11 +23,15 @@ export default class App extends Component {
 		return (
 			<div id="app">
 				<Header />
-				<Router onChange={this.handleRoute}>
-					<Home path="/" />
-					<Profile path="/profile/" user="me" />
-					<Profile path="/profile/:user" />
-				</Router>
+				<div className={`min-h-screen flex items-center justify-center pt-16 px-6`}>
+					<Router onChange={this.handleRoute}>
+						<Home path="/" />
+						<Profile path="/profile/" user="me" />
+						<Profile path="/profile/:user" />
+						<SignIn path="/login" />
+						<Registration path="/registration" />
+					</Router>
+				</div>
 			</div>
 		);
 	}
