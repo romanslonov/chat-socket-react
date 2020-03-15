@@ -1,0 +1,15 @@
+{
+  "watch": [
+    "controllers",
+    "middleware",
+    "models",
+    "routes",
+    "services",
+    "utils",
+    "validations",
+    ".env"
+  ],
+  "ext": "js,json",
+  "ignore": [],
+  "exec": "node server.js"
+}
