@@ -1,6 +1,6 @@
-import { h } from "preact";
+import { h } from 'preact';
 
-export const TextField = props => {
+export default props => {
   const {
     classes,
     placeholder,
@@ -16,28 +16,32 @@ export const TextField = props => {
     required,
     readonly,
     pattern,
-    multiple,
     disabled,
   } = props;
   return (
     <div className={wrapClasses || ''}>
       {label && (
         <label
-          className={labelClasses || "block text-gray-700 text-sm font-bold mb-2"}
+          className={
+            labelClasses || 'block text-gray-700 text-sm font-bold mb-2'
+          }
           for={id}
         >
           {label}
         </label>
       )}
       <input
-        className={classes || "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"}
+        className={
+          classes ||
+          'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+        }
         id={id}
         type={type}
         placeholder={placeholder}
         onChange={onChange ? e => onChange(e) : null}
         onClick={onClick ? e => onClick(e) : null}
-        name={name || ""}
-        value={value || ""}
+        name={name || ''}
+        value={value || ''}
         required={required || false}
         readonly={readonly || false}
         pattern={pattern || null}

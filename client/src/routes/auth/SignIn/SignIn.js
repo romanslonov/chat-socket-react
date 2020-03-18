@@ -1,12 +1,11 @@
-import { h, Component, Fragment } from "preact";
-import { TextField } from "../../../components/ui/TextField";
-import { Button } from "../../../components/ui/Button";
+import { h, Component } from 'preact';
+import TextField from '../../../components/ui/TextField';
+import Button from '../../../components/ui/Button';
 
 export default class SignIn extends Component {
-  state = {
+  state = {};
 
-  };
-
+  // eslint-disable-next-line class-methods-use-this
   render() {
     return (
       <div className="w-full max-w-xs">
@@ -17,7 +16,7 @@ export default class SignIn extends Component {
               type="text"
               placeholder="Username"
               label="Username"
-              name='username'
+              name="username"
             />
           </div>
           <div className="mb-6">
@@ -28,7 +27,7 @@ export default class SignIn extends Component {
               label="Password"
               labelClasses="block text-gray-700 text-sm font-bold mb-2"
               classes="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              name='password'
+              name="password"
             />
           </div>
           <div className="flex items-center justify-between">

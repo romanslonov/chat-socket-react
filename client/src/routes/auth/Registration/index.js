@@ -1,4 +1,3 @@
-import { h } from 'preact'
-import Registration from './Registration'
+import Registration from './Registration';
 
-export default Registration
+export default Registration;

@@ -11,6 +11,7 @@
     "serve": "preact build && sirv build --cors --single",
     "dev": "preact watch",
     "lint": "eslint src",
+    "prettify": "npx prettier --write './src/**/*.js'",
     "test": "jest"
   },
   "husky": {

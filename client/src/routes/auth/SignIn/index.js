@@ -1,4 +1,3 @@
-import { h } from 'preact'
-import SignIn from './SignIn'
+import SignIn from './SignIn';
 
-export default SignIn
+export default SignIn;
