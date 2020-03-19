@@ -1,4 +1,5 @@
 import { h, Component } from 'preact';
+import { Link } from 'preact-router';
 import TextField from '../../../components/ui/TextField';
 import Button from '../../../components/ui/Button';
 
@@ -8,8 +9,9 @@ export default class SignIn extends Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     return (
-      <div className="w-full max-w-xs">
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="min-h-screen flex items-center justify-center flex-col">
+        <h1 className="text-4xl font-bold">Sign in.</h1>
+        <form className="w-full md:max-w-lg mx-auto p-4">
           <div className="mb-4">
             <TextField
               id="username"
@@ -17,6 +19,7 @@ export default class SignIn extends Component {
               placeholder="Username"
               label="Username"
               name="username"
+              required
             />
           </div>
           <div className="mb-6">
@@ -28,20 +31,21 @@ export default class SignIn extends Component {
               labelClasses="block text-gray-700 text-sm font-bold mb-2"
               classes="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
               name="password"
+              required
             />
           </div>
           <div className="flex items-center justify-between">
             <Button
               buttonText="Sign In"
-              classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
+              classes="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
             />
-            <a
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
+            <Link
+              className="inline-block align-baseline font-bold text-sm text-blue-600 hover:text-blue-800"
               href="#"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
         </form>
       </div>

@@ -1,6 +1,7 @@
 import { h, Component } from 'preact';
 import UserCard from '../../components/userCard';
 import Chat from '../../components/chat';
+import Sidebar from '../../components/sidebar';
 
 export default class Home extends Component {
   state = {
@@ -22,16 +23,10 @@ export default class Home extends Component {
   };
 
   render() {
-    const { cards } = this.state;
     return (
-      <div className="flex mb-4 w-3/4 h-full self-start">
-        <div className="w-1/4">
-          {cards &&
-            cards.map(item => {
-              return item;
-            })}
-        </div>
-        <div className="w-3/4">
+      <div className="min-h-screen flex">
+        <Sidebar />
+        <div className="pl-64 flex-grow">
           <Chat />
         </div>
       </div>

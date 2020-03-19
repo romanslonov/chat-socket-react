@@ -16,6 +16,7 @@
   },
   "rules": {
     "prettier/prettier": ["error", { "singleQuote": true }],
-    "react/no-did-mount-set-state": 0
+    "react/no-did-mount-set-state": 0,
+    "class-methods-use-this": 0
   }
 }

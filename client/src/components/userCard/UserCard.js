@@ -5,7 +5,7 @@ export default class UserCard extends Component {
   // eslint-disable-next-line class-methods-use-this
   render() {
     return (
-      <div className={`${style.card} w-full overflow-hidden border flex p-4`}>
+      <div className={`${style.card} w-full overflow-hidden border-b flex p-4`}>
         <div className="flex items-center">
           <img
             className="w-10 h-10 rounded-full mr-4"
