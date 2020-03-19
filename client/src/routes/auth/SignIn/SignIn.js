@@ -14,11 +14,11 @@ export default class SignIn extends Component {
         <form className="w-full md:max-w-lg mx-auto p-4">
           <div className="mb-4">
             <TextField
-              id="username"
+              id="email"
               type="text"
-              placeholder="Username"
-              label="Username"
-              name="username"
+              placeholder="eg. user@gmail.com"
+              label="Email"
+              name="email"
               required
             />
           </div>
