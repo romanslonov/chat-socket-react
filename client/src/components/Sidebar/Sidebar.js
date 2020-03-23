@@ -7,7 +7,7 @@ class Sidebar extends Component {
     const { rooms } = this.props;
 
     return (
-      <div className="fixed w-64 inset-0">
+      <div className="fixed w-64 inset-0 border-r">
         <div className="p-2">
           <input
             className="w-full bg-gray-300 rounded placeholder-gray-600 px-2 py-1"

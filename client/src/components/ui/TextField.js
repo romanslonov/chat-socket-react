@@ -25,7 +25,7 @@ export default props => {
           className={
             labelClasses || 'block text-gray-700 text-sm font-bold mb-2'
           }
-          for={id}
+          htmlFor={id}
         >
           {label}
         </label>
@@ -43,7 +43,7 @@ export default props => {
         name={name || ''}
         value={value || ''}
         required={required || false}
-        readonly={readonly || false}
+        readOnly={readonly || false}
         pattern={pattern || null}
         multiple={'multiple' || false}
         disabled={disabled || false}

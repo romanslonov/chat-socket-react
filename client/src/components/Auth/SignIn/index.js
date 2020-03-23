@@ -1,3 +1,2 @@
-import SignIn from './SignIn';
-
-export default SignIn;
+export { default as SignIn } from './SignIn';
+export { default } from './SignInContainer';

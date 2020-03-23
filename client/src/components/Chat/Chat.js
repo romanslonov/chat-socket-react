@@ -4,10 +4,22 @@ import { withRouter } from 'react-router-dom';
 class Chat extends Component {
   state = {};
 
+  emptyRoom = () => {
+    return (
+      <div className="h-full w-full flex flex-row justify-center items-center">
+        <div className="font-bold">Please choose a room</div>
+      </div>
+    )
+  }
+
   render() {
     const { id } = this.props.match.params;
     const { rooms } = this.props;
 
+    if (!id) {
+      return this.emptyRoom()
+    }
+    
     return (
       <React.Fragment>
         <div className="h-full border flex flex-col">
@@ -17,11 +29,10 @@ class Chat extends Component {
                 <div className="w-10 h-10 rounded-full bg-gray-900 flex-shrink-0" />
                 <div className="ml-3">
                   <div className="text-sm font-bold">
-                    {id &&
-                      rooms[id].user.firstName + ' ' + rooms[id].user.lastName}
+                    {rooms[id].user.firstName + ' ' + rooms[id].user.lastName}
                   </div>
                   <div className="text-gray-600">
-                    {id && rooms[id].user.email}
+                    {rooms[id].user.email}
                   </div>
                 </div>
               </div>
