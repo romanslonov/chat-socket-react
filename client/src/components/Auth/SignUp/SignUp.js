@@ -35,7 +35,6 @@ export default class SignUp extends Component {
               type="email"
               placeholder="Email"
               label="Email"
-              value=""
               name="email"
               onChange={e => this.handleChange(e)}
               value={email}

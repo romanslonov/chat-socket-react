@@ -8,7 +8,6 @@ module.exports = {
         .email()
         .required()
         .error(errors => {
-          console.log(errors);
           errors.forEach(err => {
             switch (err.code) {
               case 'string.base':
