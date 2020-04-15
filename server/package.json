@@ -1,7 +1,6 @@
 {
-   "name": "typeorm-api",
+   "name": "squad-server",
    "version": "0.0.1",
-   "description": "Express, Typescript, TypeORM, JsonWebToken authentication.",
    "devDependencies": {
       "@types/bcrypt": "^3.0.0",
       "@types/cors": "^2.8.6",
