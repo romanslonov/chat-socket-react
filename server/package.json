@@ -39,7 +39,7 @@
       "typeorm": "0.2.24"
    },
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/server.ts",
       "serve": "nodemon"
    }
 }

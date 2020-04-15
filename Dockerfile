@@ -12,4 +12,4 @@ RUN npm install -g typescript
 RUN npm install -g ts-node
 RUN npm install -g nodemon
 
-CMD ["node", "server.js"]
+CMD ["ts-node", "server.ts"]
