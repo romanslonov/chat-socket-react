@@ -7,6 +7,7 @@ Installation
 ```bash
 docker-compose -f compose-server.yml build
 docker-compose -f compose-server.yml up -d
+bash init-server.sh
 ```
 Using
 ```bash
