@@ -3,13 +3,11 @@ services:
   web:
     image: squad-server
     build: .
-    command: "nodemon"
+    command: "npm start"
     environment:
       DB_HOST: mariadb
     ports:
       - "3000:3000"
-    volumes:
-      - ./server:/app
     depends_on:
       - "mariadb"
   mariadb:

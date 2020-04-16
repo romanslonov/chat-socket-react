@@ -44,6 +44,6 @@ createConnection().then(async () => {
   app.on('error', (error) => console.log(error));
 
   server.listen(config.port, () => {
-    console.log(`DB connected and server up and running on ${config.port}'`);
+    console.log(`DB connected and server up and running on ${config.port}`);
   });
 }).catch(error => console.log(error));

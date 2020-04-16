@@ -4,10 +4,6 @@ dotenv.config();
 
 const { env } = process;
 
-console.log('HOST');
-console.log(process.env.DB_HOST);
-console.log('HOST');
-
 export default {
   port: env.PORT || 3000,
   database: {
