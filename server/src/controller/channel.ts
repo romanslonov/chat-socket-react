@@ -30,10 +30,24 @@ export async function getAll(ctx: DefaultContext) {
 
 export async function getMessagesByChannel(ctx: DefaultContext) {
   const { id } = ctx.params;
-  const messages = await Message.find({ where: [{ channel: id }], relations: ['user'] });
+  const { limit = 25, page = 1 } = ctx.request.query;
+  const [messages, totalItems] = await Message.findAndCount({
+    skip: (page - 1) * limit,
+    take: limit,
+    where: [{ channel: id }],
+    relations: ['user'],
+  });
 
   ctx.status = OK;
-  ctx.body = { messages };
+  ctx.body = {
+    messages,
+    meta: {
+      totalItems,
+      currentItems: messages.length,
+      currentPage: Number(page),
+      totalPages: Math.ceil(totalItems / limit)
+    },
+  };
 }
 
 
