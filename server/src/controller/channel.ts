@@ -3,24 +3,19 @@ import { OK, CREATED } from 'http-status';
 import { Channel } from '../entity/Channel';
 import { User } from '../entity/User';
 import { Message } from '../entity/Message';
-import CacheService from '../service/Cache';
+import { EventType } from '../event';
+import { getEventManager } from '../service/eventManager';
 
 export async function create(ctx: DefaultContext) {
-  const { ids } = ctx.request.body;
+  const { userIds } = ctx.request.body;
   const channel = new Channel();
   channel.author = ctx.state.user;
-  const users = await User.findByIds(ids);
+  const users = await User.findByIds(userIds);
   channel.users = [channel.author, ...users];
 
   await channel.save();
 
-  const sockets: SocketIO.Client[] = ids.map((id: number) => CacheService.get(id));
-
-  if (sockets.length > 0) {
-    sockets.forEach((socket) => {
-      ctx.state.io.to(`${socket.id}`).emit('NEW_CHANNEL', channel);
-    });
-  }
+  getEventManager().emit(EventType.CHANNEL_NEW, { userIds, channel, io: ctx.state.io });
 
   ctx.status = CREATED;
   ctx.body = { channel };

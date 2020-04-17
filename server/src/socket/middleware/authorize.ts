@@ -2,10 +2,9 @@ import { getRepository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { User } from '../../entity/User';
 import DataStoredInToken from '../../interface/DataStoredInToken';
-import ExtendedSocket from '../../interface/ExtendedSocket';
 import config from '../../config';
 
-export default async function(socket: ExtendedSocket, next: any) {
+export default async function(socket, next: any) {
   try {
     const token = socket.handshake.query.token;
 

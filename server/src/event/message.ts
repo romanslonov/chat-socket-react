@@ -1,9 +1,10 @@
-import CacheService from '../service/Cache';
+import { connections } from '../socket/connection';
+import { EventType } from '../event';
 
 export function messageNewHandler({ message, user, channel }) {
-  const socket = CacheService.get(user.id);
+  const socket = connections.get(user.id);
 
   if (socket) {
-    socket.broadcast.to(channel.id).emit('MESSAGE_NEW', message);
+    socket.broadcast.to(channel.id).emit(EventType.MESSAGE_NEW, message);
   }
 };

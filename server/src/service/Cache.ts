@@ -2,32 +2,32 @@
 
 class CacheService {
 
-  users: Map<number, SocketIO.Socket>;
+  data: Map<number, SocketIO.Socket>;
 
   constructor() {
-    this.users = new Map();
+    this.data = new Map();
   }
 
   public add(id: number, socket: SocketIO.Socket) {
-    this.users.set(id, socket);
+    this.data.set(id, socket);
   }
 
   public get(id: number) {
-    return this.users.get(id);
+    return this.data.get(id);
   }
 
   public delete(id: number) {
-    this.users.delete(id);
+    this.data.delete(id);
   }
 
   public count(): number {
-    return this.users.size;
+    return this.data.size;
   }
 
-  public getUsers(): Map<number, SocketIO.Socket> {
-    return this.users;
+  public getdata(): Map<number, SocketIO.Socket> {
+    return this.data;
   }
 
 };
 
-export default new CacheService();
+export default CacheService;
