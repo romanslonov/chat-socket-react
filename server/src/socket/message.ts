@@ -1,4 +1,4 @@
-export function listen(socket, io) {
+export default function (socket, io) {
   // socket.on('START_TYPING', ({ roomId, user }) => {
   //   socket.broadcast.to(roomId).emit('START_TYPING', { user });
   //   console.log(user.firstName + ' typing...');

@@ -10,18 +10,17 @@ export default async (ctx: DefaultContext, next: Next) => {
 
   const token: string = ctx.request.header.authorization.split(' ')[1];
   const userRepository = getRepository(User);
-  let decoded = null;
 
   try {
-    decoded = jwt.verify(token, config.jwtSecret) as IDataStoredInToken;
+    const decoded = jwt.verify(token, config.jwtSecret) as IDataStoredInToken;
+    const user = await userRepository.findOne(decoded.id);
+
+    ctx.assert(user, 401, 'Token is not provided or invalid.');
+
+    ctx.state.user = user;
+
+    await next();
   } catch(error) {
     ctx.throw(401, 'Token is not provided or invalid.');
   }
-
-  const user = await userRepository.findOne(decoded.id);
-  ctx.assert(user, 401, 'Token is not provided or invalid.');
-
-  ctx.state.user = user;
-
-  await next();
 };

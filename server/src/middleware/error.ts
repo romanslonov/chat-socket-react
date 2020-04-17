@@ -7,9 +7,9 @@ export default async (ctx: DefaultContext, next: Next) => {
     await next();
   } catch (error) {
     if (error instanceof HttpError) {
-      ctx.status = BAD_REQUEST;
+      ctx.status = error.status || BAD_REQUEST;
       ctx.body = {
-        status: BAD_REQUEST,
+        status: error.status || BAD_REQUEST,
         message: error.message,
       }
       return;

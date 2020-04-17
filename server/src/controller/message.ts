@@ -2,7 +2,7 @@ import { DefaultContext } from 'koa';
 import { Channel } from '../entity/Channel';
 import { Message } from '../entity/Message';
 import { CREATED } from 'http-status';
-import CacheService from '../service/Cache';
+import { getEventManager } from '../service/eventManager';
 
 export async function create(ctx: DefaultContext) {
   const { type, content } = ctx.request.body;
@@ -17,11 +17,7 @@ export async function create(ctx: DefaultContext) {
 
   await message.save();
 
-  const socket = CacheService.get(ctx.request.body.userId);
-
-  if (socket) {
-    socket.broadcast.to(ctx.request.body.channelId).emit('NEW_MESSAGE', message);
-  }
+  getEventManager().emit('MESSAGE_NEW', { user, message, channel });
 
   ctx.status = CREATED;
   ctx.body = { message };

@@ -7,6 +7,9 @@ import cors from '@koa/cors';
 import http from 'http';
 import socketIO from 'socket.io';
 import router from './routes';
+import { initEventManager } from './service/eventManager';
+import { initEventsListeners } from './event';
+import { registerSocketsListeners } from './socket';
 import errorMiddleware from './middleware/error';
 import loggerMiddleware from './middleware/logger';
 import undefinedEndpointMiddleware from './middleware/undefinedEndpoint';
@@ -17,12 +20,12 @@ createConnection().then(async () => {
   const app = new Koa();
   const server = http.createServer(app.callback());
 
+  initEventManager();
+  initEventsListeners();
+
   const io = socketIO(server);
   io.use(authorizeSocketMiddleware);
-  io.on('connection', (socket) => {
-    import('./socket/connection').then(({ listen }) => listen(socket, io))
-    import('./socket/message').then(({ listen }) => listen(socket, io));
-  });
+  io.on('connection', (socket) => registerSocketsListeners(socket, io));
 
   app.use(async (ctx, next) => {
     ctx.state.io = io;

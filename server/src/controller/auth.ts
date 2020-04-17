@@ -5,6 +5,7 @@ import { User } from '../entity/User';
 import jwt from 'jsonwebtoken';
 import config from '../config';
 import bcrypt from '../service/bcrypt';
+import { getEventManager } from '../service/eventManager';
 
 export async function signin(ctx: DefaultContext) {
   const { email } = ctx.request.body;
@@ -15,8 +16,6 @@ export async function signin(ctx: DefaultContext) {
     .where('user.email = :email', { email })
     .addSelect('user.password')
     .getOne();
-
-  console.log(user);
 
   ctx.assert(
     await bcrypt.comparePassword(ctx.request.body.password, user.password),
@@ -44,6 +43,8 @@ export async function signup(ctx: DefaultContext) {
   const hash = await bcrypt.password(password);
   const user = await userRepository.save({ ...ctx.request.body, password: hash });
   const token = jwt.sign({ id: user.id }, config.jwtSecret, { expiresIn: config.tokenExpiresTime });
+
+  getEventManager().emit('USER_SIGNED_UP', user);
 
   ctx.status = CREATED;
   ctx.body = { user, token };

@@ -14,7 +14,7 @@ export async function create(ctx: DefaultContext) {
 
   await channel.save();
 
-  const sockets: SocketIO.Client[] = ids.map(id => CacheService.get(id));
+  const sockets: SocketIO.Client[] = ids.map((id: number) => CacheService.get(id));
 
   if (sockets.length > 0) {
     sockets.forEach((socket) => {
