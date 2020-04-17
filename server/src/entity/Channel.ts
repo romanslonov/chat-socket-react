@@ -1,11 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, OneToMany, BaseEntity, JoinTable, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany, OneToMany, BaseEntity, JoinTable, ManyToOne } from 'typeorm';
 import { User } from './User';
 import { Message } from './Message';
+import { IsOptional, IsString } from 'class-validator';
 
 @Entity()
 export class Channel extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ nullable: true })
+  @IsOptional()
+  @IsString({ message: 'Channel name should be a string.' })
+  name: string;
 
   @ManyToOne(() => User, { cascade: true, eager: true })
   @JoinColumn()
