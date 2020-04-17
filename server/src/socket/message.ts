@@ -8,4 +8,4 @@ export default function (socket, io) {
   //   socket.broadcast.to(roomId).emit('STOP_TYPING', { user });
   //   console.log(user.firstName + ' stoped typing.')
   // });
-}
+};
