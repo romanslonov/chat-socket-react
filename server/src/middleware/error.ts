@@ -6,6 +6,7 @@ export default async (ctx: DefaultContext, next: Next) => {
   try {
     await next();
   } catch (error) {
+    console.log(error);
     if (error instanceof HttpError) {
       ctx.status = error.status || BAD_REQUEST;
       ctx.body = {

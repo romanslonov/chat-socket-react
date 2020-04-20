@@ -24,4 +24,8 @@ export default function (socket, io) {
   socket.on('USER_OFFLINE', (payload) => {
     userStatusChange(socket, payload, io);
   });
+
+  socket.on('GET_ONLINE_FRIENDS', () => {
+    socket.emit('GET_ONLINE_FRIENDS', []);
+  })
 };
