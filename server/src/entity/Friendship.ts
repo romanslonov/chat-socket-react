@@ -1,4 +1,4 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from './User';
 
 export enum FriendshipType {
@@ -12,13 +12,20 @@ export class Friendship extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn()
   target: User;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn()
   sender: User;
+
+  @ManyToOne(() => User, { eager: false })
+  @JoinColumn()
+  lastActionByUser: User;
+
+  @Column()
+  lastActionByUserId: number;
 
   @Column({
     type: 'enum',

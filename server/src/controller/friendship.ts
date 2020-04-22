@@ -10,7 +10,10 @@ export async function makeRequest(ctx: DefaultContext) {
   const target = await User.findOne({ email: ctx.request.body.email });
   const sender = ctx.state.user;
 
-  const exist = await Friendship.findOne({ target, sender });
+  const exist = await Friendship.findOne({ where: [
+    { target, sender },
+    { sender, target }
+  ]});
 
   ctx.assert(!exist, BAD_REQUEST, 'Friend request already sent.');
 
@@ -18,10 +21,11 @@ export async function makeRequest(ctx: DefaultContext) {
 
   request.sender = sender;
   request.target = target;
+  request.lastActionByUser = sender;
 
   await request.save();
 
-  getEventManager().emit(EventType.FRIEND_REQUEST, { target, sender, io: ctx.state.io });
+  getEventManager().emit(EventType.FRIEND_REQUEST_SENT, { request, io: ctx.state.io });
 
   ctx.status = 201;
   ctx.body = { request };
@@ -29,13 +33,41 @@ export async function makeRequest(ctx: DefaultContext) {
 
 export async function accept(ctx: DefaultContext) {
   const { id } = ctx.params;
-  const friendship = await Friendship.findOne(id);
+  const currentUser = ctx.state.user;
 
-  friendship.status = FriendshipType.ACCEPTED;
+  const request = await Friendship.findOne({ where: { id }, relations: ['sender', 'target'] });
 
-  await friendship.save();
+  request.status = FriendshipType.ACCEPTED;
+  request.lastActionByUser = currentUser;
+
+  await request.save();
+
+  getEventManager().emit(EventType.FRIEND_REQUEST_ACCEPTED, { request, io: ctx.state.io });
 
   ctx.status = 200;
+  ctx.body = { request };
+}
+
+export async function cancel(ctx: DefaultContext) {
+  const { id } = ctx.params;
+  const request = await Friendship.findOne(id);
+
+  await Friendship.delete(id);
+
+  getEventManager().emit(EventType.FRIEND_REQUEST_CANCELED, { request, io: ctx.state.io });
+
+  ctx.status = 204;
+}
+
+export async function block(ctx: DefaultContext) {
+  // const { id } = ctx.params;
+  // const friendship = await Friendship.findOne(id);
+
+  // friendship.status = FriendshipType.ACCEPTED;
+
+  // await friendship.save();
+
+  // ctx.status = 200;
 }
 
 export async function getAll(ctx: DefaultContext) {

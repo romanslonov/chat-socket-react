@@ -2,13 +2,13 @@
 
 class CacheService {
 
-  data: Map<number, SocketIO.Socket>;
+  data: Map<number, any>;
 
   constructor() {
     this.data = new Map();
   }
 
-  public add(id: number, socket: SocketIO.Socket) {
+  public add(id: number, socket) {
     this.data.set(id, socket);
   }
 
@@ -24,7 +24,7 @@ class CacheService {
     return this.data.size;
   }
 
-  public getdata(): Map<number, SocketIO.Socket> {
+  public getdata() {
     return this.data;
   }
 
