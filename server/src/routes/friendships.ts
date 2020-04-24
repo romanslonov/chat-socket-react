@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import { makeRequest, getAll, accept, cancel } from '../controller/Friendship';
+import { makeRequest, getAll, accept, cancel } from '../controller/friendship';
 import authorizeMiddleware from '../middleware/authorize';
 import validateMiddleware from '../middleware/validate';
 import FriendRequest from '../dto/FriendRequest';
