@@ -38,7 +38,7 @@ export async function signup(ctx: DefaultContext) {
   const userRepository = getRepository(User);
 
   const match = await userRepository.findOne({ email });
-  ctx.assert(!match, BAD_REQUEST, 'Username already taken.');
+  ctx.assert(!match, BAD_REQUEST, 'Email already taken.');
 
   const hash = await bcrypt.password(password);
   const user = await userRepository.save({ ...ctx.request.body, password: hash });

@@ -19,14 +19,9 @@ export class User extends BaseEntity implements UserInterface {
   password: string;
 
   @Column()
-  @IsString({ message: 'First name should be a string.' })
-  @IsNotEmpty({ message: 'First name should not be empty.' })
-  firstName: string;
-
-  @Column()
-  @IsString({ message: 'Last name should be a string.' })
-  @IsNotEmpty({ message: 'Last name should not be empty.' })
-  lastName: string;
+  @IsString({ message: 'Name should be a string.' })
+  @IsNotEmpty({ message: 'Name is required.' })
+  name: string;
 
   @OneToMany(() => Message, message => message.user)
   messages: Message[];

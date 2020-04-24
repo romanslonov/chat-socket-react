@@ -25,7 +25,7 @@ export default async function (socket, io) {
     if (item.target.id !== currentUser.id) return item.target;
   });
 
-  console.log(friends);
+  // console.log(friends);
 
   const online = [];
   connections.getdata().forEach(element => {
