@@ -42,7 +42,7 @@
       <!-- end render grouped messages -->
       <div v-if="typers.length > 0">Someone is typing...</div>
     </main>
-    <form @submit.prevent="handleSubmit" class="p-4">
+    <form @submit.prevent="handleSubmit" class="border-t shadow p-4">
       <div class="relative">
         <input
           class="placeholder-gray-600 bg-gray-200 rounded-full focus:outline-none w-full px-4 py-2"
@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import bus from '@/bus';
+
 const MessageTypes = {
   TEXT: 'text',
 };
@@ -80,10 +82,6 @@ export default {
     tid: null,
   }),
   sockets: {
-    // eslint-disable-next-line func-names
-    [Events.NEW_MESSAGE](msg) {
-      this.messages.push(msg);
-    },
     [Events.START_TYPING]({ user }) {
       this.typers.push(user);
     },
@@ -122,6 +120,14 @@ export default {
   },
   created() {
     this.scrollToBottom();
+
+    bus.$on('GET_NEW_MESSAGE', (message) => {
+      if (message.channel.id === this.channel.id) {
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+      }
+    });
   },
   async beforeDestroy() {
     await this.$store.dispatch('channel/unset');

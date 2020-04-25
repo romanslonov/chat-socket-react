@@ -1,4 +1,5 @@
 import fetch from '@/fetch';
+import bus from '@/bus';
 
 const CHANNELS_FETCH = 'CHANNELS_FETCH';
 const CHANNELS_ADD = 'CHANNELS_ADD';
@@ -57,6 +58,7 @@ export default {
       });
     },
     [SOCKET_MESSAGE_NEW]: (state, message) => {
+      bus.$emit('GET_NEW_MESSAGE', message);
       state.list = state.list.map((item) => {
         const c = { ...item };
         if (c.id === message.channel.id) {
