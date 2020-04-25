@@ -5,7 +5,6 @@ import { User } from '../entity/User';
 import { Message } from '../entity/Message';
 import { EventType } from '../event';
 import { getEventManager } from '../service/eventManager';
-import user from '../socket/user';
 
 export async function create(ctx: DefaultContext) {
   const { userIds } = ctx.request.body;
@@ -14,12 +13,17 @@ export async function create(ctx: DefaultContext) {
   const users = await User.findByIds(userIds);
   channel.users = [channel.author, ...users];
 
-  await channel.save();
+  const saved = await channel.save();
 
-  getEventManager().emit(EventType.CHANNEL_NEW, { userIds, channel, io: ctx.state.io });
+  const newChannel = await Channel.findOne({
+    where: { id: saved.id },
+    relations: ['messages', 'messages.user'],
+  });
+
+  getEventManager().emit(EventType.CHANNEL_NEW, { userIds, channel: newChannel, io: ctx.state.io });
 
   ctx.status = CREATED;
-  ctx.body = { channel };
+  ctx.body = { channel: newChannel };
 }
 
 export async function getAll(ctx: DefaultContext) {
