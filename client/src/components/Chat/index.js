@@ -1,2 +1,3 @@
-export { default as Chat } from './Chat'
-export { default } from './ChatContainer'
+import VChat from './Chat.vue';
+
+export default VChat;

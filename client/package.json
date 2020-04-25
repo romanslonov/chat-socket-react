@@ -1,50 +1,46 @@
 {
-  "name": "client_react",
+  "name": "telegram-socket-io",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@fullhuman/postcss-purgecss": "^2.1.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-redux": "^7.2.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0",
-    "redux": "^4.0.5",
-    "redux-actions": "^2.6.5",
-    "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0",
-    "tailwindcss": "^1.2.0"
-  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "prebuild": "NODE_ENV=production npm run build:styles",
-    "build:styles": "postcss tailwind.css -o src/styles.css",
-    "prestart": "npm run build:styles"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "autoprefixer": "^9.7.5",
+    "core-js": "^3.6.4",
+    "register-service-worker": "^1.6.2",
+    "socket.io-client": "^2.3.0",
+    "tailwindcss": "^1.2.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.5",
+    "vue-socket.io-extended": "^4.0.1",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "autoprefixer": "^9.7.4",
-    "postcss-cli": "^7.1.0",
-    "redux-devtools": "^3.5.0"
+    "@fullhuman/postcss-purgecss": "^2.1.0",
+    "@vue/cli-plugin-babel": "~4.3.0",
+    "@vue/cli-plugin-eslint": "~4.3.0",
+    "@vue/cli-plugin-pwa": "~4.3.0",
+    "@vue/cli-plugin-router": "~4.3.0",
+    "@vue/cli-plugin-vuex": "~4.3.0",
+    "@vue/cli-service": "~4.3.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-vue": "^6.1.2",
+    "lint-staged": "^9.5.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue}": [
+      "vue-cli-service lint",
+      "git add"
+    ]
   }
 }
