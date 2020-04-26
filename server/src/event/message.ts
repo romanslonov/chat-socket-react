@@ -4,8 +4,6 @@ import { EventType } from '../event';
 export function messageNewHandler({ message, user, channel }) {
   const socket = connections.get(user.id);
 
-  console.log(user);
-
   if (socket) {
     socket.broadcast.to(channel.id).emit(EventType.MESSAGE_NEW, message);
   }
