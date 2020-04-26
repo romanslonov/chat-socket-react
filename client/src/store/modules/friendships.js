@@ -21,7 +21,7 @@ export default {
       .filter((f) => f.status === 'accepted')
       .map((item) => {
         const currentUser = rootState.user.profile;
-        const prop = item.sender.id === currentUser && currentUser.id ? 'target' : 'sender';
+        const prop = item.sender.id === currentUser.id ? 'target' : 'sender';
         const friend = { ...item[prop] };
         const { online } = rootState.online;
 
@@ -35,7 +35,7 @@ export default {
       .map((item) => {
         const currentUser = rootState.user.profile;
         const friend = { ...item };
-        friend.type = currentUser && currentUser.id === friend.lastActionByUserId ? 'outcome' : 'income';
+        friend.type = currentUser.id === friend.lastActionByUserId ? 'outcome' : 'income';
         return friend;
       }),
     blocked: (state) => state.friendships.filter((f) => f.status === 'blocked'),
