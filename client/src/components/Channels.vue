@@ -28,7 +28,6 @@ export default {
     },
   },
   created() {
-    console.log(this.fetched, this.channels.length > 0);
     this.$store.dispatch('channels/fetch');
   },
   components: { VChannel },
