@@ -6,9 +6,9 @@ const userStatusChange = async (event, socket, { user, time }, io) => {
   const { user: currentUser } = socket;
   const raw = await Friendship
     .createQueryBuilder('friendship')
-    .where('friendship.senderId = :id', { id: currentUser.id })
-    .orWhere('friendship.targetId = :id', { id: currentUser.id })
     .where('friendship.status = :status', { status: 'accepted' })
+    .andWhere('friendship.senderId = :id', { id: user.id })
+    .orWhere('friendship.targetId = :id', { id: user.id })
     .leftJoinAndSelect('friendship.sender', 'sender')
     .leftJoinAndSelect('friendship.target', 'target')
     .getMany();
@@ -47,9 +47,9 @@ export default function (socket, io) {
     const { user } = socket;
     const raw = await Friendship
       .createQueryBuilder('friendship')
-      .where('friendship.senderId = :id', { id: user.id })
-      .orWhere('friendship.targetId = :id', { id: user.id })
       .where('friendship.status = :status', { status: 'accepted' })
+      .andWhere('friendship.senderId = :id', { id: user.id })
+      .orWhere('friendship.targetId = :id', { id: user.id })
       .leftJoinAndSelect('friendship.sender', 'sender')
       .leftJoinAndSelect('friendship.target', 'target')
       .getMany();

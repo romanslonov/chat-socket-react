@@ -14,9 +14,9 @@ export default async function (socket, io) {
   const { user: currentUser } = socket;
   const raw = await Friendship
     .createQueryBuilder('friendship')
-    .where('friendship.senderId = :id', { id: currentUser.id })
-    .orWhere('friendship.targetId = :id', { id: currentUser.id })
     .where('friendship.status = :status', { status: 'accepted' })
+    .andWhere('friendship.senderId = :id', { id: currentUser.id })
+    .orWhere('friendship.targetId = :id', { id: currentUser.id })
     .leftJoinAndSelect('friendship.sender', 'sender')
     .leftJoinAndSelect('friendship.target', 'target')
     .getMany();
@@ -24,8 +24,6 @@ export default async function (socket, io) {
     if (item.sender.id !== currentUser.id) return item.sender;
     if (item.target.id !== currentUser.id) return item.target;
   });
-
-  // console.log(friends);
 
   const online = [];
   connections.getdata().forEach(element => {
@@ -46,9 +44,9 @@ export default async function (socket, io) {
     const { user: currentUser } = socket;
     const raw = await Friendship
       .createQueryBuilder('friendship')
-      .where('friendship.senderId = :id', { id: currentUser.id })
-      .orWhere('friendship.targetId = :id', { id: currentUser.id })
       .where('friendship.status = :status', { status: 'accepted' })
+      .andWhere('friendship.senderId = :id', { id: currentUser.id })
+      .orWhere('friendship.targetId = :id', { id: currentUser.id })
       .leftJoinAndSelect('friendship.sender', 'sender')
       .leftJoinAndSelect('friendship.target', 'target')
       .getMany();
