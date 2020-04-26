@@ -66,7 +66,9 @@ export default {
       return this.$store.getters['user/profile'];
     },
     channelUser() {
-      return this.channel.users.find((ru) => ru.id !== this.currentUser.id);
+      return this.currentUser
+        ? this.channel.users.find((ru) => ru.id !== this.currentUser.id)
+        : null;
     },
     channelName() {
       return this.channelUser.name;
