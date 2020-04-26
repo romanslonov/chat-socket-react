@@ -58,27 +58,16 @@ export default {
   props: {
     channel: Object,
   },
-  // created() {
-  //   this.$store.dispatch('channel/set', channel);
-  // },
   computed: {
     currentUser() {
       return this.$store.getters['user/profile'];
     },
     channelUser() {
-      return this.currentUser
-        ? this.channel.users.find((ru) => ru.id !== this.currentUser.id)
-        : null;
+      return this.channel.users.find((u) => u.id !== this.currentUser.id);
     },
     channelName() {
       return this.channelUser.name;
     },
-    // channels() {
-    //   return this.$store.getters['channels/list'];
-    // },
-    // channels() {
-    //   return this.$store.getters['channels/list'];
-    // },
   },
 };
 </script>

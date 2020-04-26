@@ -1,11 +1,16 @@
 <template>
-  <ul v-if="channelsFetched && channels.length > 0" class="w-full">
-    <li class="mb-1" v-for="channel in channels" :key="channel.id">
-      <v-channel :channel="channel" />
-    </li>
-  </ul>
+  <div v-if="fetched" >
+    <ul v-if="channels.length === 0" class="w-full">
+      <li class="mb-1" v-for="channel in channels" :key="channel.id">
+        <v-channel :channel="channel" />
+      </li>
+    </ul>
+    <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
+      No direct messages
+    </div>
+  </div>
   <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
-    No channels.
+    Loading...
   </div>
 </template>
 
@@ -18,11 +23,12 @@ export default {
     channels() {
       return this.$store.getters['channels/list'];
     },
-    channelsFetched() {
+    fetched() {
       return this.$store.getters['channels/fetched'];
     },
   },
   created() {
+    console.log(this.fetched, this.channels.length > 0);
     this.$store.dispatch('channels/fetch');
   },
   components: { VChannel },
