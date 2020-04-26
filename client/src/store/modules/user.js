@@ -16,6 +16,7 @@ export default {
 
   getters: {
     profile: (state) => state.profile,
+    lastTimeActive: (state) => state.lastTimeActive,
   },
 
   mutations: {

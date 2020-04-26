@@ -21,7 +21,10 @@ export default {
       channel.lastMessage = channel.messages[channel.messages.length - 1];
       channel.messages = channel.messages.map((m) => {
         const message = { ...m };
-        // some logic group here
+        // const { user } = rootGetters;
+        // message.unread = user
+        //   && user.lastTimeActive
+        //   && new Date(message.createTime).getTime() >= user.lastTimeActive;
         return message;
       });
       channel.users = channel.users.map((u) => {

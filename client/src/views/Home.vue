@@ -25,11 +25,12 @@ export default {
     this.$socket.client.io.opts.query = { token: window.localStorage.getItem('token') };
     this.$socket.client.open();
     window.onfocus = () => {
-      window.console.log('tab was focused');
+      window.console.log('[app]: Focused.');
+      this.$store.dispatch('user/updateActivity', null);
     };
     window.onblur = () => {
-      window.console.log('tab was blured');
-      this.$store.dispatch('user/updateActivity', new Date());
+      window.console.log('[app]: Blured.');
+      this.$store.dispatch('user/updateActivity', new Date().getTime());
     };
   },
   components: { VChat },
