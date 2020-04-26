@@ -98,7 +98,9 @@ export default {
         .find((r) => r.id === Number(this.$route.params.id));
     },
     messages() {
-      const messages = this.channel ? this.channel.messages : [];
+      const messages = this.channel
+        ? this.channel.messages
+        : [];
       const grouped = messages.reduce((group, message) => {
         if (group.length === 0) {
           group.unshift([message]);
@@ -122,7 +124,7 @@ export default {
     this.scrollToBottom();
 
     bus.$on('GET_NEW_MESSAGE', (message) => {
-      if (message.channel.id === this.channel.id) {
+      if (this.channel && this.channel.id === message.channel.id) {
         this.$nextTick(() => {
           this.scrollToBottom();
         });
