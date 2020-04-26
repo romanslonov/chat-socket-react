@@ -1,11 +1,13 @@
 <template>
   <div class="home">
+    <v-modal />
     <v-chat />
   </div>
 </template>
 
 <script>
 import VChat from '@/components/Chat';
+import VModal from '@/components/Modal';
 
 export default {
   name: 'Home',
@@ -33,6 +35,6 @@ export default {
       this.$store.dispatch('user/updateActivity', new Date().getTime());
     };
   },
-  components: { VChat },
+  components: { VChat, VModal },
 };
 </script>

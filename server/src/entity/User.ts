@@ -23,6 +23,9 @@ export class User extends BaseEntity implements UserInterface {
   @IsNotEmpty({ message: 'Name is required.' })
   name: string;
 
+  @Column()
+  avatar: string;
+
   @OneToMany(() => Message, message => message.user)
   messages: Message[];
 

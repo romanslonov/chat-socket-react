@@ -13,6 +13,12 @@ export default {
     username: env.DB_USERNAME || 'root',
     password: env.DB_PASSWORD || 'root',
   },
+  bucket: {
+    name: env.BUCKET_NAME,
+    accessKey: env.BUCKET_ACCESS_KEY,
+    secretKey: env.BUCKET_SECRET_KEY,
+    endpoint: env.BUCKET_ENDPOINT,
+  },
   jwtSecret: env.JWT_SECRET || 'jsonwebtokensecret',
   tokenExpiresTime: 1000 * 60 * 60 * 24 * 30,
 };

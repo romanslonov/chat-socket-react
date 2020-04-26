@@ -1,8 +1,9 @@
-import { getRepository, Like } from 'typeorm';
+import { Like } from 'typeorm';
 import { OK, CREATED } from 'http-status';
 import { User } from '../entity/User';
-
+import  AWS from 'aws-sdk';
 import { DefaultContext } from 'koa';
+import config from '../config';
 
 export async function profile(ctx: DefaultContext) {
   const user = await User.findOne({ id: ctx.state.user.id });
@@ -11,20 +12,38 @@ export async function profile(ctx: DefaultContext) {
   ctx.body = { user };
 };
 
-export async function search(ctx: DefaultContext) {
-  const users = await User.find({
-    email: Like(`%${ctx.request.query.email}%`),
+// const generateName = (file, timestamp, format) => `${file.mimetype.split('/')[0]}/${timestamp}/${format}.${file.originalname.split('.').pop()}`;
+
+const uploadObject = ({ buffer, file, user, timestamp }) => {
+  const s3 = new AWS.S3({
+    accessKeyId: config.bucket.accessKey,
+    secretAccessKey: config.bucket.secretKey,
+    endpoint: config.bucket.endpoint,
   });
 
-  // const users = await User
-  //   .createQueryBuilder('user')
-  //   .where('user.email like :email', { email: '%' + ctx.request.query.email + '%' })
-  //   .andWhere('user.email not like :email', { email: '%' + ctx.state.user.email + '%' })
-  //   .getMany();
+  const params = {
+      Body: buffer,
+      Bucket: config.bucket.name,
+      Key: `${user.id}/avatar/${timestamp}.${file.originalname.split('.').pop()}`,
+      ACL: 'public-read',
+      CacheControl: 'max-age=604800',
+      ContentType: file.mimetype,
+  };
 
-  ctx.status = OK;
-  ctx.body = { users };
+  return s3.upload(params).promise();
 };
+
+export async function uploadAvatar(ctx: DefaultContext) {
+  const { file } = ctx || ctx.request;
+  const timestamp = Date.now().toString();
+  const avatar = await uploadObject({ buffer: file.buffer, file, user: ctx.state.user, timestamp });
+
+  await User.update({ id: ctx.state.user.id }, { avatar: avatar.Location });
+  const user = await User.findOne(ctx.state.user.id);
+
+  ctx.status = 200;
+  ctx.body = { user };
+}
 
 // export class UserController {
 

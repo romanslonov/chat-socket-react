@@ -28,27 +28,7 @@
             "
             v-for="friend in online" :key="friend.id"
           >
-            <div class="relative">
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-500"></div>
-              <div
-                class="
-                  absolute
-                  right-0
-                  bottom-0
-                  w-3
-                  h-3
-                  border-2
-                  border-white
-                  rounded-full
-                "
-                :class="[
-                  {'bg-green-500': friend.status === 'online'},
-                  {'bg-gray-500': friend.status === 'offline'},
-                  {'bg-yellow-500': friend.status === 'away'},
-                  {'bg-red-500': friend.status === 'silent'},
-                ]"
-              ></div>
-            </div>
+            <v-avatar :url="friend.avatar" :status="friend.status" />
             <div class="flex-grow overflow-hidden ml-2">
               <div class="truncate font-bold">
                 {{ friend.name }}
@@ -130,27 +110,7 @@
             "
             v-for="friend in friends" :key="friend.id"
           >
-            <div class="relative">
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-500"></div>
-              <div
-                class="
-                  absolute
-                  right-0
-                  bottom-0
-                  w-3
-                  h-3
-                  border-2
-                  border-white
-                  rounded-full
-                "
-                :class="[
-                  {'bg-green-500': friend.status === 'online'},
-                  {'bg-gray-500': friend.status === 'offline'},
-                  {'bg-yellow-500': friend.status === 'away'},
-                  {'bg-red-500': friend.status === 'silent'},
-                ]"
-              ></div>
-            </div>
+            <v-avatar :url="friend.avatar" :status="friend.status" />
             <div class="flex-grow overflow-hidden ml-2">
               <div class="truncate font-bold">
                 {{ friend.name }}
@@ -199,7 +159,7 @@
               class="flex items-center flex-grow hover:bg-gray-200 rounded p-2"
               v-for="request in pending" :key="request.id"
             >
-              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-500"></div>
+              <v-avatar :url="friend.avatar" />
               <div class="flex-grow overflow-hidden ml-2">
                 <div class="truncate font-bold">
                   {{ request[request.type === 'outcome' ? 'target' : 'sender'].name }}
@@ -251,6 +211,7 @@
 
 <script>
 import { VTabs, VTab } from '@/components/Tabs';
+import VAvatar from '@/components/Avatar.vue';
 
 export default {
   data: () => ({
@@ -313,7 +274,7 @@ export default {
     },
   },
   components: {
-    VTabs, VTab,
+    VTabs, VTab, VAvatar,
   },
 };
 </script>

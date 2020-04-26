@@ -17,27 +17,7 @@
         "
         :class="[{ 'bg-gray-200': isActive }]"
       >
-        <div class="relative">
-          <div class="flex-shrink-0 h-10 w-10 bg-gray-500 rounded-full"></div>
-          <div
-            class="
-              absolute
-              right-0
-              bottom-0
-              w-3
-              h-3
-              border-2
-              border-white
-              rounded-full
-            "
-            :class="[
-              {'bg-green-500': channelUser.status === 'online'},
-              {'bg-gray-500': channelUser.status === 'offline'},
-              {'bg-yellow-500': channelUser.status === 'away'},
-              {'bg-red-500': channelUser.status === 'silent'},
-            ]"
-          ></div>
-        </div>
+        <v-avatar class="flex-shrink-0" :url="channelUser.avatar" :status="channelUser.status" />
         <div class="w-full overflow-hidden ml-2">
           <div class="flex">
             <div class="truncate flex-grow font-bold -mb-1">{{ channelName }}</div>
@@ -53,6 +33,8 @@
 </template>
 
 <script>
+import VAvatar from '@/components/Avatar.vue';
+
 export default {
   name: 'Channel',
   props: {
@@ -69,5 +51,6 @@ export default {
       return this.channelUser.name;
     },
   },
+  components: { VAvatar },
 };
 </script>

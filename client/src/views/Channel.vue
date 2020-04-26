@@ -31,7 +31,7 @@
               {{ message.content }}
             </div>
             <div v-if="mi === (group.length - 1)" class="flex items-center">
-              <div class="h-8 w-8 rounded-full bg-gray-500 mr-2"></div>
+              <v-avatar class="mr-2" width="32" height="32" :url="message.user.avatar" />
               <div class="font-bold text-sm">
                 {{ message.user.name}}
               </div>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import VAvatar from '@/components/Avatar.vue';
 import bus from '@/bus';
 
 const MessageTypes = {
@@ -172,6 +173,7 @@ export default {
       });
     },
   },
+  components: { VAvatar },
   watch: {
     // eslint-disable-next-line func-names
     'channel.id': {
