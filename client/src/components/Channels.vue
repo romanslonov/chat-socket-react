@@ -1,16 +1,18 @@
 <template>
-  <div v-if="fetched" >
-    <ul v-if="channels.length === 0" class="w-full">
-      <li class="mb-1" v-for="channel in channels" :key="channel.id">
-        <v-channel :channel="channel" />
-      </li>
-    </ul>
-    <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
-      No direct messages
+  <div class="flex flex-col flex-grow">
+    <div class="flex flex-col flex-grow" v-if="fetched" >
+      <ul v-if="channels.length > 0" class="w-full">
+        <li class="mb-1" v-for="channel in channels" :key="channel.id">
+          <v-channel :channel="channel" />
+        </li>
+      </ul>
+      <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
+        No direct messages
+      </div>
     </div>
-  </div>
-  <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
-    Loading...
+    <div v-else class="flex flex-grow flex-col items-center justify-center font-bold">
+      Loading...
+    </div>
   </div>
 </template>
 
