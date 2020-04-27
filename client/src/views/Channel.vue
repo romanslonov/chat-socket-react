@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col flex-grow">
-    <div v-if="!channelsFetched" class="flex items-center justify-center flex-grow p-2">
+    <div
+      v-if="!channelsFetched && !userFetched"
+      class="flex items-center justify-center flex-grow p-2"
+    >
       Loading messages...
     </div>
     <main
@@ -12,6 +15,8 @@
       <!-- empty state -->
       <div v-if="messages.length === 0">
         <v-avatar
+          :id="channel.users.find((ru) => ru.id !== currentUser.id).id"
+          :name="channel.users.find((ru) => ru.id !== currentUser.id).name"
           class="mb-2"
           width="64"
           height="64"
@@ -36,7 +41,14 @@
               {{ message.content }}
             </div>
             <div v-if="mi === (group.length - 1)" class="flex items-center">
-              <v-avatar class="mr-2" width="32" height="32" :url="message.user.avatar" />
+              <v-avatar
+                class="mr-2"
+                width="32"
+                height="32"
+                :id="message.user.id"
+                :name="message.user.name"
+                :url="message.user.avatar"
+              />
               <div class="font-bold text-sm">
                 {{ message.user.name}}
               </div>
@@ -132,6 +144,9 @@ export default {
     },
     channelsFetched() {
       return this.$store.getters['channels/fetched'];
+    },
+    userFetched() {
+      return this.$store.getters['user/fetched'];
     },
     typing() {
       if (this.channel.typers.length > 2) {

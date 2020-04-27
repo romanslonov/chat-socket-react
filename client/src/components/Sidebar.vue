@@ -41,7 +41,13 @@
     <div class="border-t p-2">
       <div class="flex items-center">
         <div v-if="user" class="flex items-center text-left w-full rounded truncate p-2">
-          <v-avatar class="flex-shrink-0" :url="user.avatar" :status="user.status" />
+          <v-avatar
+            class="flex-shrink-0"
+            :id="user.id"
+            :name="user.name"
+            :url="user.avatar"
+            :status="user.status"
+          />
           <div class="overflow-hidden ml-2">
             <div class="truncate font-bold -mb-1">{{ user.name }}</div>
             <div class="truncate text-sm text-gray-600">{{ user.email }}</div>

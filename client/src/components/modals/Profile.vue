@@ -18,7 +18,7 @@
             15.2929L8.70711 16.7071L11 14.4142V21H13Z" fill="black"/>
           </svg>
         </button>
-        <v-avatar width="96" height="96" :url="user.avatar" />
+        <v-avatar width="96" height="96" :id="user.id" :name="user.name" :url="user.avatar" />
         <input
           ref="uploader"
           @change="handleAvatarChange"

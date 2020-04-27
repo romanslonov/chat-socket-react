@@ -17,7 +17,13 @@
         "
         :class="[{ 'bg-gray-200': isActive }]"
       >
-        <v-avatar class="flex-shrink-0" :url="channelUser.avatar" :status="channelUser.status" />
+        <v-avatar
+          class="flex-shrink-0"
+          :name="channelUser.name"
+          :id="channelUser.id"
+          :url="channelUser.avatar"
+          :status="channelUser.status"
+        />
         <div class="w-full overflow-hidden ml-2">
           <div class="flex">
             <div class="truncate flex-grow font-bold -mb-1">{{ channelName }}</div>

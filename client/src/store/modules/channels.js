@@ -113,7 +113,7 @@ export default {
         });
     },
     typing({ commit }, { userId, channelId }) {
-      // eslint-disable-next-line prefer-arrow-callback
+      // eslint-disable-next-line
       const debounced = debounce(function () {
         commit(CHANNEL_STOP_TYPING, { userId, channelId });
       }, 5000);
