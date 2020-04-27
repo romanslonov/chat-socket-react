@@ -89,7 +89,7 @@ export default {
         }
         return channel;
       });
-      console.log(`User #${userId} started typing in channel #${channelId}.`);
+      window.console.log(`User #${userId} started typing in channel #${channelId}.`);
     },
     [CHANNEL_STOP_TYPING]: (state, { userId, channelId }) => {
       state.list = state.list.map((item) => {
@@ -99,7 +99,7 @@ export default {
         }
         return channel;
       });
-      console.log(`User #${userId} stoped typing in channel #${channelId}.`);
+      window.console.log(`User #${userId} stoped typing in channel #${channelId}.`);
     },
   },
 
