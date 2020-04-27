@@ -11,7 +11,12 @@
     >
       <!-- empty state -->
       <div v-if="messages.length === 0">
-        <div class="w-16 h-16 bg-gray-500 rounded-full mb-2"></div>
+        <v-avatar
+          class="mb-2"
+          width="64"
+          height="64"
+          :avatar="channel.users.find((ru) => ru.id !== currentUser.id).avatar"
+        />
         <div class="text-3xl font-bold">
           {{ channel.users.find((ru) => ru.id !== currentUser.id).name }}
         </div>
@@ -51,11 +56,16 @@
           v-model="message"
         />
         <button
-          style="right:8px; top:8px;"
+          style="right:6px; top:4px;"
           type="submit"
-          class="absolute bg-black text-white rounded-full px-3"
+          class="flex items-center justify-center absolute bg-black text-white rounded-full h-8 w-8"
         >
-          Send
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M21 3L1 11.5714L9.23529
+            14.7647L12.4286 23L21 3ZM12.5212 17.7067L10.781 13.219L6.29326 11.4788L17.1921
+             6.80789L12.5212 17.7067Z" fill="white"/>
+          </svg>
+
         </button>
       </div>
     </form>
