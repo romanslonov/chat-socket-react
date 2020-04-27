@@ -10,3 +10,9 @@ export function channelNewHandler({ userIds, channel, io }) {
     });
   }
 };
+
+export function channelTypingHandler({ userId, channelId }) {
+ const socket = connections.get(userId);
+
+ socket.to(channelId).emit(EventType.CHANNEL_TYPING, { userId, channelId });
+};

@@ -10,6 +10,8 @@
   "dependencies": {
     "autoprefixer": "^9.7.5",
     "core-js": "^3.6.4",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
     "register-service-worker": "^1.6.2",
     "socket.io-client": "^2.3.0",
     "tailwindcss": "^1.2.0",

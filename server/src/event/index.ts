@@ -1,7 +1,7 @@
 import { getEventManager } from '../service/eventManager';
 import { signUpHandler } from './user';
 import { messageNewHandler } from './message';
-import { channelNewHandler } from './channel';
+import { channelNewHandler, channelTypingHandler } from './channel';
 import {
   friendRequestSentHandler,
   friendRequestAcceptedHandler,
@@ -13,6 +13,7 @@ export enum EventType {
   USER_SIGN_UP = 'USER_SIGN_UP',
   MESSAGE_NEW = 'MESSAGE_NEW',
   CHANNEL_NEW = 'CHANNEL_NEW',
+  CHANNEL_TYPING = 'CHANNEL_TYPING',
   FRIEND_REQUEST_SENT = 'FRIEND_REQUEST_SENT',
   FRIEND_REQUEST_ACCEPTED = 'FRIEND_REQUEST_ACCEPTED',
   FRIEND_REQUEST_CANCELED = 'FRIEND_REQUEST_CANCELED',
@@ -29,4 +30,5 @@ export function initEventsListeners() {
   eventManager.on(EventType.FRIEND_REQUEST_ACCEPTED, friendRequestAcceptedHandler);
   eventManager.on(EventType.FRIEND_REQUEST_CANCELED, friendRequestCanceledHandler);
   eventManager.on(EventType.FRIEND_REQUEST_BLOCKED, friendRequestBlockedHandler);
+  eventManager.on(EventType.CHANNEL_TYPING, channelTypingHandler);
 };

@@ -57,3 +57,13 @@ export async function getMessagesByChannel(ctx: DefaultContext) {
     },
   };
 }
+
+export async function typing(ctx: DefaultContext) {
+  const { id } = ctx.params;
+  getEventManager().emit(EventType.CHANNEL_TYPING, {
+    userId: ctx.state.user.id,
+    channelId: id,
+    io: ctx.state.io,
+  });
+  ctx.status = 204;
+}

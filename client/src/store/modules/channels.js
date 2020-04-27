@@ -1,11 +1,14 @@
 import fetch from '@/fetch';
 import bus from '@/bus';
+import debounce from 'lodash.debounce';
 
 const CHANNELS_FETCH = 'CHANNELS_FETCH';
 const CHANNELS_ADD = 'CHANNELS_ADD';
 const CHANNELS_MESSAGE_ADD = 'CHANNELS_MESSAGE_ADD';
 const SOCKET_MESSAGE_NEW = 'SOCKET_MESSAGE_NEW';
 const SOCKET_CHANNEL_NEW = 'SOCKET_CHANNEL_NEW';
+const CHANNEL_START_TYPING = 'CHANNEL_START_TYPING';
+const CHANNEL_STOP_TYPING = 'CHANNEL_STOP_TYPING';
 
 export default {
   namespaced: true,
@@ -77,6 +80,27 @@ export default {
     [SOCKET_CHANNEL_NEW]: (state, channel) => {
       state.list = [channel, ...state.list];
     },
+    [CHANNEL_START_TYPING]: (state, { userId, channelId }) => {
+      state.list = state.list.map((item) => {
+        const channel = { ...item };
+        if (channel.id === Number(channelId)) {
+          const user = channel.users.find((u) => u.id === userId);
+          channel.typers = [...channel.typers || [], user];
+        }
+        return channel;
+      });
+      console.log(`User #${userId} started typing in channel #${channelId}.`);
+    },
+    [CHANNEL_STOP_TYPING]: (state, { userId, channelId }) => {
+      state.list = state.list.map((item) => {
+        const channel = { ...item };
+        if (channel.id === Number(channelId)) {
+          channel.typers = channel.typers.filter((t) => t.id !== userId);
+        }
+        return channel;
+      });
+      console.log(`User #${userId} stoped typing in channel #${channelId}.`);
+    },
   },
 
   actions: {
@@ -87,6 +111,14 @@ export default {
         .catch((error) => {
           throw error;
         });
+    },
+    typing({ commit }, { userId, channelId }) {
+      // eslint-disable-next-line prefer-arrow-callback
+      const debounced = debounce(function () {
+        commit(CHANNEL_STOP_TYPING, { userId, channelId });
+      }, 5000);
+      commit(CHANNEL_START_TYPING, { userId, channelId });
+      debounced();
     },
     create({ commit }, { userIds }) {
       return fetch('/channels', {

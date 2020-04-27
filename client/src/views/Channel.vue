@@ -7,7 +7,7 @@
       v-else
       ref="container"
       class="flex-grow overflow-auto p-4"
-      style="max-height: calc(100vh - 72px - 64px);"
+      style="max-height: calc(100vh - 81px - 64px);"
     >
       <!-- empty state -->
       <div v-if="messages.length === 0">
@@ -45,15 +45,15 @@
         </div>
       </div>
       <!-- end render grouped messages -->
-      <div v-if="typers.length > 0">Someone is typing...</div>
     </main>
-    <form @submit.prevent="handleSubmit" class="border-t shadow p-4">
-      <div class="relative">
+    <form @submit.prevent="handleSubmit" class="relative border-t shadow px-4 pt-4 pb-0">
+      <div class="relative mb-6">
         <input
           class="placeholder-gray-600 bg-gray-200 rounded-full focus:outline-none w-full px-4 py-2"
           type="text"
           placeholder="Your message"
           v-model="message"
+          @input="handleInput"
         />
         <button
           style="right:6px; top:4px;"
@@ -65,8 +65,12 @@
             14.7647L12.4286 23L21 3ZM12.5212 17.7067L10.781 13.219L6.29326 11.4788L17.1921
              6.80789L12.5212 17.7067Z" fill="white"/>
           </svg>
-
         </button>
+      </div>
+      <div class="absolute text-xs font-bold" style="bottom:2px;">
+        <div v-if="channel && channel.typers && channel.typers.length > 0">
+          {{ typing }}
+        </div>
       </div>
     </form>
   </div>
@@ -75,14 +79,13 @@
 <script>
 import VAvatar from '@/components/Avatar.vue';
 import bus from '@/bus';
+import throttle from 'lodash.throttle';
 
 const MessageTypes = {
   TEXT: 'text',
 };
 const Events = {
-  NEW_MESSAGE: 'NEW_MESSAGE',
-  START_TYPING: 'START_TYPING',
-  STOP_TYPING: 'STOP_TYPING',
+  CHANNEL_TYPING: 'CHANNEL_TYPING',
 };
 
 export default {
@@ -93,8 +96,8 @@ export default {
     tid: null,
   }),
   sockets: {
-    [Events.START_TYPING]({ user }) {
-      this.typers.push(user);
+    [Events.CHANNEL_TYPING](payload) {
+      this.$store.dispatch('channels/typing', payload);
     },
     [Events.STOP_TYPING]() {
       this.typers = [];
@@ -129,6 +132,14 @@ export default {
     },
     channelsFetched() {
       return this.$store.getters['channels/fetched'];
+    },
+    typing() {
+      if (this.channel.typers.length > 2) {
+        return 'Two or more people are typing...';
+      }
+      return `${this.channel.typers
+        .map((typer) => typer.name)
+        .reduce((prev, curr, i) => (i === 0 ? curr : `${prev}, ${curr}`), '')} typing...`;
     },
   },
   created() {
@@ -174,6 +185,10 @@ export default {
           this.scrollToBottom();
         });
     },
+    // eslint-disable-next-line func-names
+    handleInput: throttle(function () {
+      this.$fetch(`/channels/${this.channel.id}/typing`, { method: 'POST' });
+    }, 5000, { trailing: false }),
     scrollToBottom() {
       this.$nextTick(() => {
         const { container } = this.$refs;
@@ -197,10 +212,10 @@ export default {
      * Indicate other people about typing...
      */
     message() {
-      this.$socket.client.emit(
-        Events.START_TYPING,
-        { channelId: this.channel.id, user: this.currentUser },
-      );
+      // this.$socket.client.emit(
+      //   Events.START_TYPING,
+      //   { channelId: this.channel.id, user: this.currentUser },
+      // );
 
       // this.$socket.client.emit(
       //   Events.STOP_TYPING,

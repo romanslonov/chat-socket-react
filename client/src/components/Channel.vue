@@ -24,7 +24,11 @@
             <div class="text-sm text-gray-600 ml-2">Tue</div>
           </div>
           <div class="truncate text-sm text-gray-600">
-            {{ channel.lastMessage && channel.lastMessage.content }}
+            {{
+              channel.typers && channel.typers.length > 0
+              ? 'typing...'
+              : channel.lastMessage && channel.lastMessage.content
+            }}
           </div>
         </div>
       </button>
