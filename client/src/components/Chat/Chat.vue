@@ -5,40 +5,24 @@
     <div class="flex flex-grow">
       <v-sidebar />
 
-      <div class="flex flex-col flex-grow">
+      <div class="chat-content flex flex-col flex-grow">
         <router-view v-if="!!this.$route.params.id" />
         <div v-else class="flex flex-grow flex-col p-4">
           <v-chat-tabs />
         </div>
       </div>
 
-      <!-- <div class="w-56 bg-gray-200 border-l p-4">
-        <div class="font-bold">Activity</div>
-        <div v-if="online">
-          <div
-            v-for="user in online"
-            class="flex items-center flex-grow hover:bg-gray-100 rounded p-2"
-            :key="user.id"
-          >
-            <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-500">
-              </div>
-              <div class="flex-grow overflow-hidden ml-2">
-                <div class="truncate font-bold">{{ user.email }}</div>
-                <div class="text-sm text-gray-600">Online</div>
-              </div>
-            <div>
-          </div>
-        </div>
-        </div>
-      </div> -->
+      <div class="w-56 border-l">
+        <v-channel-pane />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import VChannelPane from '@/components/ChannelPane.vue';
 import VHeader from '@/components/Header.vue';
-import VSidebar from '@/components/Sidebar.vue';
+import VSidebar from '@/components/Sidebar';
 import VChatTabs from './Tabs.vue';
 
 export default {
@@ -48,8 +32,11 @@ export default {
     user() {
       return this.$store.getters['user/profile'];
     },
-    online() {
-      return this.$store.getters['online/list'];
+    channel() {
+      return this.$store.getters['channels/list'].find((c) => c.id === Number(this.$route.params.id));
+    },
+    channelUser() {
+      return this.channel.users.find((u) => u.id !== this.user.id);
     },
   },
   mounted() {
@@ -64,7 +51,15 @@ export default {
     },
   },
   components: {
-    VSidebar, VHeader, VChatTabs,
+    VSidebar, VHeader, VChatTabs, VChannelPane,
   },
 };
 </script>
+
+<style lang="postcss">
+@screen lg {
+  .chat-content {
+    padding-left: 320px;
+  }
+}
+</style>

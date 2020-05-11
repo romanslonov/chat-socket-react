@@ -10,6 +10,7 @@ module.exports = {
   database: config.database.name,
   synchronize: true,
   logging: false,
+  timezone: 'UTC',
   entities: [
     'src/entity/**/*.ts'
   ],

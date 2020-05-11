@@ -27,7 +27,6 @@
         <div class="w-full overflow-hidden ml-2">
           <div class="flex">
             <div class="truncate flex-grow font-bold -mb-1">{{ channelName }}</div>
-            <div class="text-sm text-gray-600 ml-2">Tue</div>
           </div>
           <div class="truncate text-sm text-gray-600">
             {{

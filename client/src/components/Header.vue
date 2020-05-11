@@ -9,7 +9,7 @@
         <div class="text-sm text-gray-600">{{ header.description }}</div>
       </div>
     </div>
-    <div class="pr-4">
+    <div class="w-56 flex items-center justify-end pr-4">
       <button class="text-gray-600 hover:text-black">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd" clip-rule="evenodd" d="M2.81818 3H21.1818C22.186 3 23 3.89543

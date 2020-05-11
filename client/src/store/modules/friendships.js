@@ -7,6 +7,9 @@ const FRIENDSHIPS_CANCEL = 'FRIENDSHIPS_CANCEL';
 const SOCKET_FRIEND_REQUEST_SENT = 'SOCKET_FRIEND_REQUEST_SENT';
 const SOCKET_FRIEND_REQUEST_ACCEPTED = 'SOCKET_FRIEND_REQUEST_ACCEPTED';
 const SOCKET_FRIEND_REQUEST_CANCELED = 'SOCKET_FRIEND_REQUEST_CANCELED';
+const SOCKET_GET_ONLINE_FRIENDS = 'SOCKET_GET_ONLINE_FRIENDS';
+const SOCKET_USER_OFFLINE = 'SOCKET_USER_OFFLINE';
+const SOCKET_USER_ONLINE = 'SOCKET_USER_ONLINE';
 
 export default {
   namespaced: true,
@@ -14,20 +17,20 @@ export default {
   state: {
     fetched: false,
     friendships: [],
+    online: [],
   },
 
   getters: {
+    online: (state) => state.online,
     friends: (state, getters, rootState) => state.friendships
       .filter((f) => f.status === 'accepted')
       .map((item) => {
         const currentUser = rootState.user.profile;
         const prop = item.sender.id === currentUser.id ? 'target' : 'sender';
         const friend = { ...item[prop] };
-        const { online } = rootState.online;
+        const { online } = state;
 
-        friend.status = online && online.some((onlineUser) => onlineUser.id === friend.id)
-          ? 'online'
-          : 'offline';
+        friend.status = online.some((id) => id === friend.id) ? 'online' : 'offline';
         return friend;
       }),
     pending: (state, getters, rootState) => state.friendships
@@ -78,6 +81,17 @@ export default {
     [SOCKET_FRIEND_REQUEST_SENT]: (state, request) => {
       window.console.log(`[socket.io]: New friend request from ${request.sender.email}.`);
       state.friendships = [request, ...state.friendships];
+    },
+    [SOCKET_GET_ONLINE_FRIENDS]: (state, list) => {
+      state.online = list;
+    },
+    [SOCKET_USER_OFFLINE](state, { userId }) {
+      window.console.log(`[socket.io]: ${userId} goes to offline!`);
+      state.online = state.online.filter((id) => id !== userId);
+    },
+    [SOCKET_USER_ONLINE](state, { userId }) {
+      window.console.log(`[socket.io]: ${userId} comes to online!`);
+      state.online.push(userId);
     },
   },
 

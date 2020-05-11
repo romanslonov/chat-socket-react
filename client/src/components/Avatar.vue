@@ -26,6 +26,7 @@
         rounded-full
       "
       :class="[
+        statusSize,
         {'bg-green-500': status === 'online'},
         {'bg-gray-500': status === 'offline'},
       ]"
@@ -54,6 +55,12 @@ export default {
     placeholderTextSize() {
       if (this.width >= 48 || this.height >= 48) {
         return 'text-2xl';
+      }
+      return '';
+    },
+    statusSize() {
+      if (this.width >= 48 || this.height >= 48) {
+        return 'w-4 h-4';
       }
       return '';
     },

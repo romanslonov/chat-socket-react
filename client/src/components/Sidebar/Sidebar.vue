@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col border-r shadow" style="width:320px">
+  <div class="sidebar fixed left-0 bottom-0 flex flex-col border-r shadow">
     <div class="flex flex-col flex-grow p-2">
       <router-link to="/" v-slot="{ href, route, navigate, isActive, isExactActive }">
         <button
@@ -19,7 +19,7 @@
             py-3
           "
         >
-          <svg class="text-gray-600 mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="mr-2" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12 23C5.92487 23 1 18.0751 1
             12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12
             23ZM19.3995 17.1246C20.4086 15.6703 21 13.9042 21 12C21 7.02944 16.9706 3 12
@@ -74,7 +74,7 @@
 
 <script>
 import VAvatar from '@/components/Avatar.vue';
-import VChannels from '@/components/Channels.vue';
+import VChannels from '@/components/Sidebar/Channels.vue';
 import bus from '@/bus';
 
 export default {
@@ -95,3 +95,17 @@ export default {
   components: { VChannels, VAvatar },
 };
 </script>
+
+<style lang="postcss">
+.sidebar {
+  width:320px;
+  top:64px;
+  transform: translateX(-320px);
+}
+
+@screen lg {
+  .sidebar {
+    transform: translateX(0px);
+  }
+}
+</style>

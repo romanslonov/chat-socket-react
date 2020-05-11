@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany, OneToMany, BaseEntity, JoinTable, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany, OneToMany, BaseEntity, JoinTable, ManyToOne, OneToOne } from 'typeorm';
 import { User } from './User';
 import { Message } from './Message';
 import { IsOptional, IsString } from 'class-validator';

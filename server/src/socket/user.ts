@@ -1,35 +1,20 @@
-import { connections } from '../socket/connection';
-import { User } from '../entity/User';
-import { Friendship } from '../entity/Friendship';
+import { connections, friends } from '../socket/connection';
 
-const userStatusChange = async (event, socket, { user, time }, io) => {
+const userStatusChange = async (event, socket, { userId, time }, io) => {
   const { user: currentUser } = socket;
-  const raw = await Friendship
-    .createQueryBuilder('friendship')
-    .where('friendship.status = :status', { status: 'accepted' })
-    .andWhere('friendship.senderId = :id', { id: user.id })
-    .orWhere('friendship.targetId = :id', { id: user.id })
-    .leftJoinAndSelect('friendship.sender', 'sender')
-    .leftJoinAndSelect('friendship.target', 'target')
-    .getMany();
-  const friends = raw.map((item) => {
-    if (item.sender.id !== currentUser.id) return item.sender;
-    if (item.target.id !== currentUser.id) return item.target;
-  });
+  const data = friends.get(currentUser.id);
 
   const online = [];
   connections.getdata().forEach(element => {
-    if (friends.some(friend => friend.id === element.user.id)) {
-      online.push(element.user);
+    if (data.some(friend => friend.id === element.user.id)) {
+      online.push(element.user.id);
     }
   });
 
-  // console.log(online);
-
-  const sockets = online.map(onlineUser => connections.get(onlineUser.id));
+  const sockets = online.map(userid => connections.get(userid));
 
   if (sockets.length > 0) {
-    sockets.forEach((socket) => io.to(`${socket.id}`).emit(event, { user, time }));
+    sockets.forEach((socket) => io.to(`${socket.id}`).emit(event, { userId, time }));
   }
 }
 
@@ -43,26 +28,18 @@ export default function (socket, io) {
     userStatusChange('USER_OFFLINE', socket, payload, io);
   });
 
-  socket.on('GET_ONLINE_FRIENDS', async () => {
-    const { user } = socket;
-    const raw = await Friendship
-      .createQueryBuilder('friendship')
-      .where('friendship.status = :status', { status: 'accepted' })
-      .andWhere('friendship.senderId = :id', { id: user.id })
-      .orWhere('friendship.targetId = :id', { id: user.id })
-      .leftJoinAndSelect('friendship.sender', 'sender')
-      .leftJoinAndSelect('friendship.target', 'target')
-      .getMany();
-    const friends = raw.map((item) => {
-      if (item.sender.id !== user.id) return item.sender;
-      if (item.target.id !== user.id) return item.target;
-    });
-    const online = [];
-    connections.getdata().forEach(element => {
-      if (friends.some(friend => friend.id === element.user.id)) {
-        online.push(element.user);
-      }
-    });
-    socket.emit('GET_ONLINE_FRIENDS', online);
-  })
+  // socket.on('GET_ONLINE_FRIENDS', async () => {
+  //   const { user } = socket;
+  //   const data = friends.get(user.id);
+
+  //   console.log(friends.getdata());
+
+  //   const online = [];
+  //   connections.getdata().forEach(element => {
+  //     if (data.some(friend => friend.id === element.user.id)) {
+  //       online.push(element.user);
+  //     }
+  //   });
+  //   socket.emit('GET_ONLINE_FRIENDS', online);
+  // })
 };

@@ -29,7 +29,7 @@ export class User extends BaseEntity implements UserInterface {
   @OneToMany(() => Message, message => message.user)
   messages: Message[];
 
-  @ManyToMany(() => Channel, room => room.users)
+  @ManyToMany(() => Channel, channel => channel.users)
   channels: Channel[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

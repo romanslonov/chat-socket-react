@@ -5,7 +5,7 @@ import store from '@/store';
 import fetch from '@/fetch';
 import VueSocketIOPlugin from 'vue-socket.io-extended';
 import io from 'socket.io-client';
-// import './registerServiceWorker';
+import './registerServiceWorker';
 import { HOST } from './constants';
 import './main.css';
 

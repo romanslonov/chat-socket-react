@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <div>
+    <v-toast />
     <v-modal />
     <v-chat />
   </div>
@@ -8,13 +9,14 @@
 <script>
 import VChat from '@/components/Chat';
 import VModal from '@/components/Modal';
+import VToast from '@/components/Toast.vue';
 
 export default {
   name: 'Home',
   sockets: {
     connect() {
       window.console.log('[socket.io]: Connected.');
-      this.$socket.client.emit('GET_ONLINE_FRIENDS');
+      // this.$socket.client.emit('GET_ONLINE_FRIENDS');
     },
     disconnect() {
       window.console.error('[socket.io]: Disconnected.');
@@ -35,6 +37,6 @@ export default {
       this.$store.dispatch('user/updateActivity', new Date().getTime());
     };
   },
-  components: { VChat, VModal },
+  components: { VChat, VModal, VToast },
 };
 </script>

@@ -49,8 +49,8 @@ export default {
       this.open(options);
     });
 
-    bus.$on('modal.close', () => {
-      this.close();
+    bus.$on('modal.close', (data) => {
+      this.close(data);
     });
 
     bus.$on('modal.dismiss', () => {
@@ -66,9 +66,19 @@ export default {
         this.$refs.container.focus();
       });
     },
-    close() {},
+    close(data) {
+      this.opened = false;
+
+      if (this.options.onClose && typeof this.options.onClose === 'function') {
+        this.options.onClose(data);
+      }
+    },
     dismiss() {
       this.opened = false;
+
+      if (this.options.onDismiss && typeof this.options.onDismiss === 'function') {
+        this.options.onDismiss();
+      }
     },
     onEnter() {
       bus.$emit('modal.opened', {

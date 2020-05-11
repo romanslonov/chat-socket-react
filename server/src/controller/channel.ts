@@ -29,7 +29,7 @@ export async function create(ctx: DefaultContext) {
 export async function getAll(ctx: DefaultContext) {
   const user = await User.findOne({
     where: { id: ctx.state.user.id },
-    relations: ['channels', 'channels.messages', 'channels.messages.user'],
+    relations: ['channels'],
   });
 
   ctx.status = OK;

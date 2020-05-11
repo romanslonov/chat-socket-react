@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 const CHANNELS_FETCH = 'CHANNELS_FETCH';
 const CHANNELS_ADD = 'CHANNELS_ADD';
 const CHANNELS_MESSAGE_ADD = 'CHANNELS_MESSAGE_ADD';
+const CHANNELS_MESSAGES_INSERT = 'CHANNELS_MESSAGES_INSERT';
 const SOCKET_MESSAGE_NEW = 'SOCKET_MESSAGE_NEW';
 const SOCKET_CHANNEL_NEW = 'SOCKET_CHANNEL_NEW';
 const CHANNEL_START_TYPING = 'CHANNEL_START_TYPING';
@@ -21,19 +22,19 @@ export default {
   getters: {
     list: (state, getters, rootGetters) => (state.fetched ? state.list.map((c) => {
       const channel = { ...c };
-      channel.lastMessage = channel.messages[channel.messages.length - 1];
-      channel.messages = channel.messages.map((m) => {
-        const message = { ...m };
-        // const { user } = rootGetters;
-        // message.unread = user
-        //   && user.lastTimeActive
-        //   && new Date(message.createTime).getTime() >= user.lastTimeActive;
-        return message;
-      });
+      // channel.lastMessage = channel.messages[channel.messages.length - 1];
+      // channel.messages = channel.messages.map((m) => {
+      //   const message = { ...m };
+      //   // const { user } = rootGetters;
+      //   // message.unread = user
+      //   //   && user.lastTimeActive
+      //   //   && new Date(message.createTime).getTime() >= user.lastTimeActive;
+      //   return message;
+      // });
       channel.users = channel.users.map((u) => {
         const user = { ...u };
-        const { online } = rootGetters.online;
-        user.status = online && online.some((onlineUser) => onlineUser.id === user.id)
+        const { online } = rootGetters.friendships;
+        user.status = online.some((id) => id === user.id)
           ? 'online'
           : 'offline';
         return user;
@@ -45,12 +46,13 @@ export default {
 
   mutations: {
     [CHANNELS_FETCH]: (state, channels) => {
-      state.list = channels;
-      // .map((item) => {
-      //   const channel = { ...item };
-      //   // channel.lastMessage = channel.messages[channel.messages.length - 1] || null;
-      //   return channel;
-      // });
+      state.list = channels
+        .map((item) => {
+          const channel = { ...item };
+          channel.messages = channel.messages || [];
+          // channel.lastMessage = channel.messages[channel.messages.length - 1] || null;
+          return channel;
+        });
       state.fetched = true;
     },
     [CHANNELS_MESSAGE_ADD]: (state, message) => {
@@ -59,8 +61,18 @@ export default {
         if (c.id === message.channel.id) {
           c.messages = [...c.messages, message];
         }
-        c.lastMessage = c.messages[c.messages.length - 1];
+        // c.lastMessage = c.messages[c.messages.length - 1];
         return c;
+      });
+    },
+    [CHANNELS_MESSAGES_INSERT]: (state, { channelId, messages }) => {
+      state.list = state.list.map((item) => {
+        if (item.id === channelId) {
+          const channel = { ...item };
+          channel.messages = messages;
+          return channel;
+        }
+        return item;
       });
     },
     [SOCKET_MESSAGE_NEW]: (state, message) => {
@@ -70,7 +82,7 @@ export default {
         if (c.id === message.channel.id) {
           c.messages = [...c.messages, message];
         }
-        c.lastMessage = c.messages[c.messages.length - 1];
+        // c.lastMessage = c.messages[c.messages.length - 1];
         return c;
       });
     },
@@ -129,6 +141,17 @@ export default {
         .then(({ channel }) => {
           commit(CHANNELS_ADD, channel);
           return channel;
+        })
+        .catch((error) => {
+          throw error;
+        });
+    },
+    getMessages({ commit }, channelId) {
+      return fetch(`/channels/${channelId}/messages?limit=50`)
+        .then((response) => response.json())
+        .then(({ messages }) => {
+          commit(CHANNELS_MESSAGES_INSERT, { channelId, messages });
+          return messages;
         })
         .catch((error) => {
           throw error;

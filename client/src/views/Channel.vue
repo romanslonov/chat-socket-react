@@ -9,7 +9,7 @@
     <main
       v-else
       ref="container"
-      class="flex-grow overflow-auto p-4"
+      class="flex-grow overflow-auto p-2"
       style="max-height: calc(100vh - 81px - 64px);"
     >
       <!-- empty state -->
@@ -20,7 +20,7 @@
           class="mb-2"
           width="64"
           height="64"
-          :avatar="channel.users.find((ru) => ru.id !== currentUser.id).avatar"
+          :url="channel.users.find((ru) => ru.id !== currentUser.id).avatar"
         />
         <div class="text-3xl font-bold">
           {{ channel.users.find((ru) => ru.id !== currentUser.id).name }}
@@ -29,73 +29,27 @@
       </div>
       <!-- end empty state -->
       <!-- render grouped messages -->
-      <div v-for="(group, gi) in messages" :key="gi">
-        <div
-          v-for="(message, mi) in group" :key="message.id"
-          :class="{ 'flex justify-end': message.user.id === currentUser.id }"
-        >
-          <div :class="[ message.user.id === currentUser.id ? 'flex flex-col items-end' : '' ]">
-            <div
-              class="inline-block bg-gray-200 rounded-full px-4 py-1 my-1"
-            >
-              {{ message.content }}
-            </div>
-            <div v-if="mi === (group.length - 1)" class="flex items-center">
-              <v-avatar
-                class="mr-2"
-                width="32"
-                height="32"
-                :id="message.user.id"
-                :name="message.user.name"
-                :url="message.user.avatar"
-              />
-              <div class="font-bold text-sm">
-                {{ message.user.name}}
-              </div>
-            </div>
-          </div>
-        </div>
+      <div v-for="(group, gi) in messages" :key="gi" class="my-1">
+        <v-message
+          v-for="(message, mi) in group"
+          :message="message"
+          :is-last-message="group.length === (mi+1)"
+          :key="message.id"
+        />
       </div>
       <!-- end render grouped messages -->
     </main>
-    <form @submit.prevent="handleSubmit" class="relative border-t shadow px-4 pt-4 pb-0">
-      <div class="relative mb-6">
-        <input
-          class="placeholder-gray-600 bg-gray-200 rounded-full focus:outline-none w-full px-4 py-2"
-          type="text"
-          placeholder="Your message"
-          v-model="message"
-          @input="handleInput"
-        />
-        <button
-          style="right:6px; top:4px;"
-          type="submit"
-          class="flex items-center justify-center absolute bg-black text-white rounded-full h-8 w-8"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M21 3L1 11.5714L9.23529
-            14.7647L12.4286 23L21 3ZM12.5212 17.7067L10.781 13.219L6.29326 11.4788L17.1921
-             6.80789L12.5212 17.7067Z" fill="white"/>
-          </svg>
-        </button>
-      </div>
-      <div class="absolute text-xs font-bold" style="bottom:2px;">
-        <div v-if="channel && channel.typers && channel.typers.length > 0">
-          {{ typing }}
-        </div>
-      </div>
-    </form>
+    <v-send-box />
   </div>
 </template>
 
 <script>
+import VMessage from '@/components/Channel/Message.vue';
+import VSendBox from '@/components/Channel/Sendbox.vue';
 import VAvatar from '@/components/Avatar.vue';
 import bus from '@/bus';
-import throttle from 'lodash.throttle';
+import { parseISO, differenceInMinutes } from 'date-fns';
 
-const MessageTypes = {
-  TEXT: 'text',
-};
 const Events = {
   CHANNEL_TYPING: 'CHANNEL_TYPING',
 };
@@ -103,22 +57,14 @@ const Events = {
 export default {
   name: 'ChannelPage',
   data: () => ({
-    message: '',
-    typers: [],
     tid: null,
   }),
   sockets: {
     [Events.CHANNEL_TYPING](payload) {
       this.$store.dispatch('channels/typing', payload);
     },
-    [Events.STOP_TYPING]() {
-      this.typers = [];
-    },
   },
   computed: {
-    fetched() {
-      return this.$store.getters['channel/fetched'];
-    },
     channel() {
       return this.$store.getters['channels/list']
         .find((r) => r.id === Number(this.$route.params.id));
@@ -126,17 +72,20 @@ export default {
     messages() {
       const messages = this.channel
         ? this.channel.messages
-        : [];
-      const grouped = messages.reduce((group, message) => {
+        : null;
+      const grouped = messages ? messages.reduce((group, message) => {
         if (group.length === 0) {
           group.unshift([message]);
-        } else if (group[0][0].user.id === message.user.id) {
+        } else if (
+          group[0][0].user.id === message.user.id
+          && differenceInMinutes(parseISO(message.createTime), parseISO(group[0][0].createTime)) < 5
+        ) {
           group[0].push(message);
         } else {
           group.unshift([message]);
         }
         return group;
-      }, []);
+      }, []) : [];
       return grouped.reverse();
     },
     currentUser() {
@@ -158,8 +107,6 @@ export default {
     },
   },
   created() {
-    this.scrollToBottom();
-
     bus.$on('GET_NEW_MESSAGE', (message) => {
       if (this.channel && this.channel.id === message.channel.id) {
         this.$nextTick(() => {
@@ -167,43 +114,15 @@ export default {
         });
       }
     });
-  },
-  async beforeDestroy() {
-    await this.$store.dispatch('channel/unset');
-    window.console.log('[app]: Previous channel was unset.');
-  },
-  methods: {
-    // async setChannel(id = this.$route.params.id) {
-    //   const channel = this.$store.getters['channels/list'].find((r) => r.id === Number(id));
 
-    //   await this.$store.dispatch('channel/set', channel);
-
-    //   console.log(`[app]: Channel #${channel.id} was set.`);
-
-    //   this.scrollToBottom();
-    //   console.log('[app]: scroll to bottom after channel loaded.');
-    // },
-    handleSubmit() {
-      if (this.message === '') return;
-
-      const message = {
-        type: MessageTypes.TEXT,
-        userId: this.currentUser.id,
-        channelId: this.channel.id,
-        content: this.message,
-      };
-
-      this.$store.dispatch('channels/addMessage', message)
+    if (this.channel) {
+      this.$store.dispatch('channels/getMessages', this.channel.id)
         .then(() => {
-          this.message = '';
-          window.console.log('[app] Your message was sent and delivered.');
           this.scrollToBottom();
         });
-    },
-    // eslint-disable-next-line func-names
-    handleInput: throttle(function () {
-      this.$fetch(`/channels/${this.channel.id}/typing`, { method: 'POST' });
-    }, 5000, { trailing: false }),
+    }
+  },
+  methods: {
     scrollToBottom() {
       this.$nextTick(() => {
         const { container } = this.$refs;
@@ -213,48 +132,17 @@ export default {
       });
     },
   },
-  components: { VAvatar },
+  components: { VAvatar, VSendBox, VMessage },
   watch: {
-    // eslint-disable-next-line func-names
     'channel.id': {
-      handler(next, prev) {
-        if (next !== prev) {
-          this.scrollToBottom();
-        }
+      handler(next) {
+        this.$store.dispatch('channels/getMessages', next)
+          .then(() => {
+            this.scrollToBottom();
+          });
+        // this.scrollToBottom();
       },
     },
-    /**
-     * Indicate other people about typing...
-     */
-    message() {
-      // this.$socket.client.emit(
-      //   Events.START_TYPING,
-      //   { channelId: this.channel.id, user: this.currentUser },
-      // );
-
-      // this.$socket.client.emit(
-      //   Events.STOP_TYPING,
-      //   { channelId: this.channel.id, user: this.currentUser },
-      // );
-    },
-    // eslint-disable-next-line func-names
-    // '$route.params.id': function (id) {
-    //   this.setChannel(id);
-    // },
-    // eslint-disable-next-line func-names
-    // 'messages.length': {
-    //   deep: true,
-    //   handler(next, prev) {
-    //     if (next > prev) {
-    //       this.scrollToBottom();
-    //     }
-    //   },
-    // },
-    // channelsFetched(fetched) {
-    //   if (fetched) {
-    //     this.setChannel();
-    //   }
-    // },
   },
 };
 </script>

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import VChannel from '@/components/Channel.vue';
+import VChannel from '@/components/Sidebar/Channel.vue';
 
 export default {
   name: 'Channels',
