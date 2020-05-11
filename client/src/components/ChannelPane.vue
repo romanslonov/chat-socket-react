@@ -60,11 +60,11 @@ export default {
         props: { callerId: payload.callerId },
         onClose: async () => {
           this.answerCall(payload.offer);
-          console.log('Answer on voice call');
+          window.console.log('[app]: Answer on voice call');
         },
         onDismiss: async () => {
           this.declineCall();
-          console.log('Declined this voice call');
+          window.console.log('[app]: Declined this voice call');
         },
         component: () => import('@/components/modals/VoiceCall.vue'),
       });
@@ -125,7 +125,6 @@ export default {
       this.connection.ontrack = (event) => {
         const remoteVideo = this.$refs.video;
         if (remoteVideo.srcObject) return;
-        console.log('ontrack');
         // eslint-disable-next-line prefer-destructuring
         remoteVideo.srcObject = event.streams[0];
       };
