@@ -21,7 +21,7 @@
    "dependencies": {
       "@koa/cors": "^2.2.3",
       "@koa/multer": "^2.0.2",
-      "aws-sdk": "^2.663.0",
+      "aws-sdk": "^2.1354.0",
       "bcrypt": "^4.0.1",
       "body-parser": "^1.18.1",
       "class-transformer": "^0.2.3",
@@ -39,7 +39,7 @@
       "nodejs-event-manager": "^1.1.2",
       "reflect-metadata": "^0.1.10",
       "socket.io": "^2.3.0",
-      "typeorm": "0.2.24"
+      "typeorm": "0.3.14"
    },
    "scripts": {
       "start": "ts-node src/server.ts",
